@@ -1,0 +1,46 @@
+﻿@model IEnumerable<NewsWebPage.Models.SpecialTags>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+<div class="row">
+    <div class="col-12">
+        <h2 style="text-align:center"> Danh sách nhãn đặc biệt</h2>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-9"></div>
+        <div class="col-6">
+            <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i> &nbsp; Thêm danh mục</a>
+        </div>
+    </div>
+</div>
+
+<br />
+<div>
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th>
+                @Html.DisplayNameFor(m => m.Name)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.Name)
+                </td>
+                <td>
+                    <partial name="_TableButtonPartial" model="item.Id" />&nbsp;
+                </td>
+            </tr>
+        }
+    </table>
+</div>

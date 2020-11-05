@@ -1,0 +1,34 @@
+﻿@model NewsWebPage.Models.Category
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 style="text-align:center">Sửa đổi tác giả</h2>
+<div class="container">
+    <form method="post" asp-action="Edit">
+        <div class="p-4 border rounded">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group row">
+                <div class="col-2"></div>
+                <div class="col-2">
+                    <label asp-for="Name">Name</label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Name" class="form-control" />
+                </div>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <br />
+            <div style="text-align:center">
+                <input type="submit" class="btn btn-primary" asp-route-id="@Model.Id" value="Update" />
+                <a asp-action="Index" class="btn btn-success">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

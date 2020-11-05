@@ -1,0 +1,91 @@
+﻿@model NewsWebPage.Models.ViewModel.PostViewModel
+@using NewsWebPage.Extensions
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 style="text-align:center">Thêm bài viết</h2>
+
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+
+        <div class="p-4 border rounded">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Post.Name">Tiêu đề</label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Post.Name" class="form-control" />
+                </div>
+                <span asp-validation-for="Post.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Categories">Danh mục</label>
+                </div>
+                <div class="col-5">
+                    <select asp-for="@Model.Post.CategoryID" asp-items="Model.Categories.ToSelectListItem(Model.Post.CategoryID)" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Authors">Tác giả</label>
+                </div>
+                <div class="col-5">
+                    <select asp-for="@Model.Post.AuthorID" asp-items="Model.Authors.ToSelectListItem(Model.Post.AuthorID)" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="SpecialTags">Nhãn đặc biệt</label>
+                </div>
+                <div class="col-5">
+                    <select asp-for="@Model.Post.SpecialTagsID" asp-items="Model.SpecialTags.ToSelectListItem(Model.Post.SpecialTagsID)" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Post.Content">Nội dung</label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Post.Content" class="form-control" />
+                </div>
+                <span asp-validation-for="Post.Content" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Post.Description">Mô tả</label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Post.Description" class="form-control" />
+                </div>
+                <span asp-validation-for="Post.Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Post.Image">Name</label>
+                </div>
+                <div class="col-5">
+                    <input type="file" name="files" multiple class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="form-group" style="text-align:center">
+                <input type="submit" class="btn btn-primary" value="Create" />
+                <a asp-action="Index" class="btn btn-success">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

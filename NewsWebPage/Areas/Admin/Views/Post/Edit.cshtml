@@ -1,0 +1,93 @@
+﻿@model NewsWebPage.Models.ViewModel.PostViewModel
+@using NewsWebPage.Extensions
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-info">Cập nhật bài viết</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="p-4 border rounded row">
+        <input hidden asp-for="Post.Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Post.Name"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Name" class="form-control" />
+                </div>
+                <span asp-validation-for="Post.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Vendors">Nhà cung cấp</label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="@Model.Post.AuthorID" asp-items="Model.Authors.ToSelectListItem(Model.Post.AuthorID)" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Products.Price">Nội dung</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Content" class="form-control" />
+                </div>
+                <span asp-validation-for="Post.Content" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Products.Price">Mô tả</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Description" class="form-control" />
+                </div>
+                <span asp-validation-for="Post.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Post.Image"></label>
+                </div>
+                <div class="col-8">
+                    <input type="file" name="files" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Categories">Danh mục</label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="@Model.Post.CategoryID" asp-items="Model.Categories.ToSelectListItem(Model.Post.CategoryID)" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Categories">Tên nhãn</label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="@Model.Post.SpecialTagsID" asp-items="Model.SpecialTags.ToSelectListItem(Model.Post.SpecialTagsID)" class="form-control"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <img src="@Model.Post.Image" width="100%" style="border-radius:5px; border:1px solid #bbb9b9;" />
+        </div>
+
+        <br />
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Cập nhật" />
+            <a asp-action="Index" class="btn btn-success">Trở về</a>
+        </div>
+    </div>
+</form>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

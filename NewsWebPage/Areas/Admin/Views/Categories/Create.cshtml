@@ -1,0 +1,35 @@
+﻿@model NewsWebPage.Models.Category
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 style="text-align:center">Thêm danh mục</h2>
+
+<div class="container">
+    <form method="post" asp-action="Create">
+        <div style="margin-top:20px"></div>
+        <div class="p-4 border rounded">
+            <div asp-validation-summary="ModelOnly" class="text-white"></div>
+            <div class="form-group row">
+                <div class="col-2"></div>
+                <div class="col-2">
+                    <label asp-for="Name">Name</label>
+                </div>
+                <div class="col-5">
+                    <input asp-for="Name" class="form-control" />
+                </div>
+                <span asp-validation-for="Name" class="text-white"></span>
+            </div>
+            <br />
+            <div class="form-group" style="text-align:center">
+                <input type="submit" class="btn btn-primary" value="Create" />
+                <a asp-action="Index" class="btn btn-success">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

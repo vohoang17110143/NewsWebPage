@@ -1,0 +1,90 @@
+﻿@model IEnumerable<NewsWebPage.Models.Post>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+
+<div class="row">
+    <div class="col-12">
+        <h2 style="text-align:center">Danh sách bài viết</h2>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-9"></div>
+        <div class="col-6">
+            <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i> &nbsp; Thêm bài viết</a>
+        </div>
+    </div>
+</div>
+<br />
+<div>
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th>
+                @Html.DisplayNameFor(m => m.Name)
+            </th>
+            <th>
+                Người viết
+            </th>
+            <th>
+                Ngày tạo
+            </th>
+            <th>
+                Mô tả
+            </th>
+            <th>
+                Lượt xem
+            </th>
+            <th>
+                Danh mục
+            </th>
+
+            <th>
+                Nhãn đặc biệt
+            </th>
+
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.Name)
+                </td>
+                <th>
+                    @Html.DisplayFor(m => item.Author.Name)
+                </th>
+
+                <th>
+                    @Html.DisplayFor(m => item.DateCreated)
+                </th>
+                <td>
+                    @Html.DisplayFor(m => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.ViewCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Category.Name)
+                </td>
+
+                <td>
+                    @if (!item.SpecialTags.Name.Equals("--None--"))
+                    {
+                        @Html.DisplayFor(m => item.SpecialTags.Name)}
+                </td>
+
+                <td>
+                    <partial name="_TableButtonPartial" model="item.Id" />
+                </td>
+            </tr>
+        }
+    </table>
+</div>

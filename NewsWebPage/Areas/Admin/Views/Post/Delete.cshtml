@@ -1,0 +1,90 @@
+﻿@model NewsWebPage.Models.ViewModel.PostViewModel
+@using NewsWebPage.Extensions
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-info">Xóa sản phẩm</h2>
+
+<form method="post">
+    <div class="p-4 border rounded row">
+        <input hidden asp-for="Post.Id" />
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Products.Name">Tên bài viết</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Name" readonly class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="ProductTypes">Tác giả</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Author.Name" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Categories">Danh mục</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Category.Name" readonly class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="SpecialTags">Tên thẻ</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.SpecialTags.Name" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Products.Update">Ngày cập nhật</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.DateCreated" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Products.Price">Nội dung</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Content" readonly class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Products.Quantity">Mô tả</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Post.Description" readonly class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-3">
+            <img src="@Model.Post.Image" width="100%" style="border-radius:5px; border:1px solid #bbb9b9;" />
+        </div>
+
+        <br />
+        <div class="form-group">
+            <input type="submit" class="btn btn-danger" value="Xóa" />
+            <a asp-action="Index" class="btn btn-success">Trở về</a>
+        </div>
+    </div>
+</form>
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

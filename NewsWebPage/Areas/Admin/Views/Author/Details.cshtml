@@ -1,0 +1,50 @@
+﻿@model NewsWebPage.Models.Author
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 style="text-align:center">Chi tiết tác giả</h2>
+
+<div class="p-4 border rounded container">
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="Name"></label>
+        </div>
+        <div class="col-8">
+            <input asp-for="Name" disabled class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="Address"></label>
+        </div>
+        <div class="col-8">
+            <input asp-for="Address" disabled class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="PhoneNumber"></label>
+        </div>
+        <div class="col-8">
+            <input asp-for="PhoneNumber" disabled class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="Description"></label>
+        </div>
+        <div class="col-8">
+            <input asp-for="Description" disabled class="form-control" />
+        </div>
+    </div>
+
+    <br />
+    <div style="text-align:center">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
+        <a asp-action="Index" class="btn btn-success">Back</a>
+    </div>
+</div>
