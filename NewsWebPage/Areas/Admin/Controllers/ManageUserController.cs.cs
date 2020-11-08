@@ -21,7 +21,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View(_db.ApplicationUser.Where(m => m.Role == SD.AdminEndUser).Where(m => m.EmailConfirmed == true).Where(m => m.isLockRole == false).ToList());
+            return View(_db.ApplicationUser.ToList());
         }
 
         //Get Edit
@@ -56,6 +56,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
                 ApplicationUser userFromDb = _db.ApplicationUser.Where(u => u.Id == id).FirstOrDefault();
                 userFromDb.Name = applicationUser.Name;
                 userFromDb.PhoneNumber = applicationUser.PhoneNumber;
+                userFromDb.Address = applicationUser.Address;
 
                 _db.SaveChanges();
                 return RedirectToAction(nameof(Index));

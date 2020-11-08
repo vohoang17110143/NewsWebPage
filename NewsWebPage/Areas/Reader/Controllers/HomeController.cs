@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NewsWebPage.Data;
 using NewsWebPage.Models;
 
 namespace NewsWebPage.Areas.Reader.Controllers
@@ -12,16 +14,17 @@ namespace NewsWebPage.Areas.Reader.Controllers
     [Area("Reader")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext db)
         {
-            _logger = logger;
+            _db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var postlist = await _db.Posts.Include(m => m.Category).Include(m => m.SpecialTags).Include(m => m.Author).Include(m => m.ViewCount).ToListAsync();
+            return View(postlist);
         }
 
         public IActionResult Privacy()
