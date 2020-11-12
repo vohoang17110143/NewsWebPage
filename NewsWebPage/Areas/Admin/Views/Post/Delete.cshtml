@@ -1,8 +1,9 @@
 ﻿@model NewsWebPage.Models.ViewModel.PostViewModel
+
 @using NewsWebPage.Extensions
 @{
     ViewData["Title"] = "Delete";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_AdminSite.cshtml";
 }
 
 <br />
@@ -26,7 +27,7 @@
                     <label for="ProductTypes">Tác giả</label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Post.Author.Name" readonly class="form-control" />
+                    <input asp-for="Post.Author" readonly class="form-control" />
                 </div>
             </div>
             <div class="form-group row">
@@ -58,8 +59,8 @@
                 <div class="col-4">
                     <label for="Products.Price">Nội dung</label>
                 </div>
-                <div class="col-8">
-                    <input asp-for="Post.Content" readonly class="form-control" />
+                <div class="col-8 box">
+                    @Html.Raw(@Model.Post.Content)
                 </div>
             </div>
             <div class="form-group row">
@@ -87,4 +88,5 @@
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
 }

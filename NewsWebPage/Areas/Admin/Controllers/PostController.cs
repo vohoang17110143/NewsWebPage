@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using NewsWebPage.Utility;
 
 namespace NewsWebPage.Areas.Admin.Controllers
 {
+    [Authorize(Roles = SD.SuperAdminEndUser)]
     [Area("Admin")]
     public class PostController : Controller
     {
@@ -29,7 +31,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
             PostVM = new PostViewModel()
             {
                 Post = new Models.Post(),
-                Authors = _context.Authors,
+
                 Categories = _context.Categories,
                 SpecialTags = _context.SpecialTags
             };
@@ -37,7 +39,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var post = _context.Posts.Include(m => m.SpecialTags).Include(m => m.Author).Include(m => m.Category).Include(m => m.SpecialTags);
+            var post = _context.Posts.Include(m => m.SpecialTags).Include(m => m.Category).Include(m => m.SpecialTags);
             return View(await post.ToListAsync());
         }
 
@@ -56,6 +58,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
             }
 
             _context.Posts.Add(PostVM.Post);
+
             await _context.SaveChangesAsync();
 
             //lưu ảnh
@@ -96,7 +99,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            PostVM.Post = await _context.Posts.Include(m => m.SpecialTags).Include(m => m.Category).Include(m => m.Author).SingleOrDefaultAsync(m => m.Id == id);
+            PostVM.Post = await _context.Posts.Include(m => m.SpecialTags).Include(m => m.Category).SingleOrDefaultAsync(m => m.Id == id);
 
             if (PostVM.Post == null)
             {
@@ -141,7 +144,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
 
                 productFromDb.Name = PostVM.Post.Name;
 
-                productFromDb.AuthorID = PostVM.Post.AuthorID;
+                productFromDb.Author = PostVM.Post.Author;
                 productFromDb.DateCreated = DateTime.Now;
                 productFromDb.Content = PostVM.Post.Content;
                 productFromDb.Description = PostVM.Post.Description;
@@ -165,7 +168,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            PostVM.Post = await _context.Posts.Include(m => m.Author).Include(m => m.Category).Include(m => m.SpecialTags).SingleOrDefaultAsync(m => m.Id == id);
+            PostVM.Post = await _context.Posts.Include(m => m.Category).Include(m => m.SpecialTags).SingleOrDefaultAsync(m => m.Id == id);
 
             if (PostVM.Post == null)
             {
@@ -182,7 +185,7 @@ namespace NewsWebPage.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            PostVM.Post = await _context.Posts.Include(m => m.Author).Include(m => m.Category).Include(m => m.SpecialTags).SingleOrDefaultAsync(m => m.Id == id);
+            PostVM.Post = await _context.Posts.Include(m => m.Category).Include(m => m.SpecialTags).SingleOrDefaultAsync(m => m.Id == id);
 
             if (PostVM.Post == null)
             {

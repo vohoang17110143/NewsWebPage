@@ -81,6 +81,9 @@ namespace NewsWebPage.Areas.Identity.Pages.Account
 
             [Display(Name = "Super Admin")]
             public bool IsSuperAdmin { get; set; }
+
+            [Display(Name = "Admin")]
+            public bool IsAdmin { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -107,15 +110,23 @@ namespace NewsWebPage.Areas.Identity.Pages.Account
                     {
                         await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
                     }
+                    if (!await _roleManager.RoleExistsAsync(SD.Reader))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(SD.Reader));
+                    }
+
                     if (Input.IsSuperAdmin)
                     {
                         await _userManager.AddToRoleAsync(user, SD.SuperAdminEndUser);
                     }
-                    else
+                    else if (Input.IsAdmin)
                     {
                         await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
                     }
-
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.Reader);
+                    }
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

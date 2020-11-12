@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,13 +16,14 @@ namespace NewsWebPage.Models
         public string Name { get; set; }
 
         [Display(Name = "Lượt xem")]
+        [DefaultValue(0)]
         public int ViewCount { get; set; }
 
         [Display(Name = "Mô tả")]
         public string Description { set; get; }
 
         [Display(Name = "Nội dung")]
-        [DataType(DataType.Text)]
+        [Column("Nội dung", TypeName = "Nvarchar(max)")]
         public string Content { get; set; }
 
         [Display(Name = "Ảnh đại diện")]
@@ -37,10 +39,7 @@ namespace NewsWebPage.Models
         public virtual Category Category { get; set; }
 
         [Display(Name = "Người viết")]
-        public int AuthorID { get; set; }
-
-        [ForeignKey("AuthorID")]
-        public virtual Author Author { get; set; }
+        public string Author { get; set; }
 
         [Display(Name = "Nhãn đặc biệt")]
         public int SpecialTagsID { get; set; }

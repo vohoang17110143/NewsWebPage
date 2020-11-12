@@ -16,9 +16,9 @@ namespace NewsWebPage.Data
 
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Author> Authors { get; set; }
 
         public DbSet<SpecialTags> SpecialTags { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Article> Articles { get; set; }
     }
 }

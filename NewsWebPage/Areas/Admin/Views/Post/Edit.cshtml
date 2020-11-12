@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_AdminSite.cshtml";
 }
 
 <br />
@@ -26,10 +26,10 @@
 
             <div class="form-group row">
                 <div class="col-4">
-                    <label for="Vendors">Nhà cung cấp</label>
+                    <label for="Vendors">Người viết</label>
                 </div>
                 <div class="col-8">
-                    <select asp-for="@Model.Post.AuthorID" asp-items="Model.Authors.ToSelectListItem(Model.Post.AuthorID)" class="form-control"></select>
+                    <input asp-for="Post.Author" class="form-control" readonly />
                 </div>
             </div>
             <div class="form-group row">
@@ -37,7 +37,7 @@
                     <label for="Products.Price">Nội dung</label>
                 </div>
                 <div class="col-8">
-                    <input asp-for="Post.Content" class="form-control" />
+                    <textarea id="content" asp-for="Post.Content" class="form-control"></textarea>
                 </div>
                 <span asp-validation-for="Post.Content" class="text-danger"></span>
             </div>
@@ -90,4 +90,26 @@
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#content'), {
+                fontFamily: {
+                    options: [
+                        'default',
+                        'Ubuntu, Arial, sans-serif',
+                        'Ubuntu Mono, Courier New, Courier, monospace'
+                    ]
+                },
+                toolbar: [
+                    'heading', 'bulletedList', 'numberedList', 'fontFamily', 'undo', 'redo'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(err => {
+                console.error(err.stack);
+            });
+    </script>
 }

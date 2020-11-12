@@ -13,5 +13,7 @@ namespace NewsWebPage.Models
         [Required]
         [Display(Name = "Danh mục")]
         public string Name { get; set; }
+
+        public string Alias { get; set; }
     }
 }

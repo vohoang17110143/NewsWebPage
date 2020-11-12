@@ -15,6 +15,6 @@ namespace NewsWebPage.Utility
 
         public const string SuperAdminEndUser = "Super Admin";
         public const string AdminEndUser = "Admin";
-        public const string Customer = "Reader";
+        public const string Reader = "Reader";
     }
 }

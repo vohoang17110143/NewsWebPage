@@ -1,8 +1,12 @@
 ﻿@model NewsWebPage.Models.ViewModel.PostViewModel
 @using NewsWebPage.Extensions
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_AdminSite.cshtml";
 }
 
 <br />
@@ -31,14 +35,14 @@
                     <select asp-for="@Model.Post.CategoryID" asp-items="Model.Categories.ToSelectListItem(Model.Post.CategoryID)" class="form-control"></select>
                 </div>
             </div>
-
             <div class="form-group row">
                 <div class="col-2">
-                    <label asp-for="Authors">Tác giả</label>
+                    <label asp-for="Post.Author">Người viết</label>
                 </div>
                 <div class="col-5">
-                    <select asp-for="@Model.Post.AuthorID" asp-items="Model.Authors.ToSelectListItem(Model.Post.AuthorID)" class="form-control"></select>
+                    <input asp-for="Post.Author" value="@User.Identity.Name" class="form-control" readonly />
                 </div>
+                <span asp-validation-for="Post.Author" class="text-danger"></span>
             </div>
 
             <div class="form-group row">
@@ -55,7 +59,7 @@
                     <label asp-for="Post.Content">Nội dung</label>
                 </div>
                 <div class="col-5">
-                    <input asp-for="Post.Content" class="form-control" />
+                    <textarea id="content" asp-for="Post.Content" class="form-control"></textarea>
                 </div>
                 <span asp-validation-for="Post.Content" class="text-danger"></span>
             </div>
@@ -65,7 +69,7 @@
                     <label asp-for="Post.Description">Mô tả</label>
                 </div>
                 <div class="col-5">
-                    <input asp-for="Post.Description" class="form-control" />
+                    <textarea asp-for="Post.Description" class="form-control"></textarea>
                 </div>
                 <span asp-validation-for="Post.Description" class="text-danger"></span>
             </div>
@@ -88,4 +92,27 @@
 </div>
 @section Scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#content'), {
+                fontFamily: {
+                    options: [
+                        'default',
+                        'Ubuntu, Arial, sans-serif',
+                        'Ubuntu Mono, Courier New, Courier, monospace'
+                    ]
+                },
+                toolbar: [
+                    'heading', 'bulletedList', 'numberedList', 'fontFamily', 'undo', 'redo'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(err => {
+                console.error(err.stack);
+            });
+    </script>
 }

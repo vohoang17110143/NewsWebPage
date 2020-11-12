@@ -8,7 +8,6 @@ namespace NewsWebPage.Models.ViewModel
     public class PostViewModel
     {
         public Post Post { get; set; }
-        public IEnumerable<Author> Authors { get; set; }
 
         public IEnumerable<Category> Categories { get; set; }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebPage.Data;
 using NewsWebPage.Models;
@@ -9,6 +10,7 @@ using NewsWebPage.Utility;
 
 namespace NewsWebPage.Areas.Admin.Controllers
 {
+    [Authorize(Roles = SD.SuperAdminEndUser)]
     [Area("Admin")]
     public class ManageUserController : Controller
     {
