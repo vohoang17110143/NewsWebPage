@@ -61,7 +61,6 @@ namespace NewsWebPage.Areas.Admin.Controllers
 
             await _context.SaveChangesAsync();
 
-            //lưu ảnh
             string webRootPath = _hostingEnvironment.WebRootPath;
             var files = HttpContext.Request.Form.Files;
 
@@ -70,7 +69,6 @@ namespace NewsWebPage.Areas.Admin.Controllers
 
             if (files.Count != 0)
             {
-                //Image will be upload
                 var uploads = Path.Combine(webRootPath, SD.DefaultImageFolder);
                 var extension = Path.GetExtension(files[0].FileName);
 
@@ -82,7 +80,6 @@ namespace NewsWebPage.Areas.Admin.Controllers
             }
             else
             {
-                //when not upload image
                 var uploads = Path.Combine(webRootPath, SD.DefaultImageFolder + @"\" + SD.DefaultImage);
                 System.IO.File.Copy(uploads, webRootPath + @"\" + SD.DefaultImageFolder + @"\" + PostVM.Post.Id + ".png");
                 postFromDb.Image = @"\" + SD.DefaultImageFolder + @"\" + PostVM.Post.Id + ".png";
@@ -160,7 +157,6 @@ namespace NewsWebPage.Areas.Admin.Controllers
             return View(PostVM);
         }
 
-        //GET : Details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

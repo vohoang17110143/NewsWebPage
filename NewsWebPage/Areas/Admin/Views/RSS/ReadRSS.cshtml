@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "ReadRSS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "ReadRSS";
+}
+
+<h2>Trang đọc tin tức</h2>
+
+@using (Html.BeginForm())
+{
+
+    <input type="url" name="url" placeholder="Nhập địa chỉ đọc RSS"
+           class="form-control" value="@ViewBag.url" style="min-width:100%" />
+    <br />
+    <input type="submit" value="Đọc tin RSS" class="btn btn-danger" />
+
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Link</th>
+            <th>Description</th>
+            <th>Publish Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.RSSFeed != null)
+        {
+            foreach (var item in ViewBag.RSSFeed)
+            {
+                <tr>
+                    <td>
+                    <td>@item.Title</td>
+                    <td><a href="@item.Link">@item.Link</a></td>
+                    <td>@item.Description</td>
+                    <td>@item.PubDate</td>
+                </tr>
+
+            }
+
+        }
+    </tbody>
+</table>

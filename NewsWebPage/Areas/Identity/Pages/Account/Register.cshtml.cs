@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using NewsWebPage.Data;
 using NewsWebPage.Models;
 using NewsWebPage.Utility;
@@ -80,10 +81,10 @@ namespace NewsWebPage.Areas.Identity.Pages.Account
             public string Address { get; set; }
 
             [Display(Name = "Super Admin")]
-            public bool IsSuperAdmin { get; set; }
+            public string IsSuperAdmin { get; set; }
 
             [Display(Name = "Admin")]
-            public bool IsAdmin { get; set; }
+            public string IsAdmin { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -102,52 +103,93 @@ namespace NewsWebPage.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    if (!await _roleManager.RoleExistsAsync(SD.AdminEndUser))
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole(SD.AdminEndUser));
-                    }
-                    if (!await _roleManager.RoleExistsAsync(SD.SuperAdminEndUser))
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
-                    }
-                    if (!await _roleManager.RoleExistsAsync(SD.Reader))
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole(SD.Reader));
-                    }
-
-                    if (Input.IsSuperAdmin)
-                    {
-                        await _userManager.AddToRoleAsync(user, SD.SuperAdminEndUser);
-                    }
-                    else if (Input.IsAdmin)
-                    {
-                        await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, SD.Reader);
-                    }
                     _logger.LogInformation("User created a new account with password.");
 
+                    //xác nhận email bằng cách gửi link url callback có chứa token xác nhận
+                    //Tạo code token và chèn vào URL callback
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                    string callbackUrl = Url.Action("Confirm", "AccountController1", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    //Phân quyền lúc đăng ký người dùng.
+                    //Nếu user hiện tại là SuperAdmin thì cho phép tạo tài khoảng cho nhân viên bán hàng hoặc tạo thêm 1 SuperAdmin mới
+                    if (User.IsInRole(SD.SuperAdminEndUser))
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        if (!await _roleManager.RoleExistsAsync(SD.AdminEndUser))
+                        {
+                            await _roleManager.CreateAsync(new IdentityRole(SD.AdminEndUser));
+                        }
+                        if (!await _roleManager.RoleExistsAsync(SD.SuperAdminEndUser))
+                        {
+                            await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
+                        }
+                        if (bool.Parse(Input.IsSuperAdmin))
+                        {
+                            await _userManager.AddToRoleAsync(user, SD.SuperAdminEndUser);
+                            ApplicationUser userFromDb = _db.ApplicationUser.Where(u => u.Email == Input.Email).FirstOrDefault();
+                            userFromDb.Role = SD.SuperAdminEndUser;
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
+                            ApplicationUser userFromDb = _db.ApplicationUser.Where(u => u.Email == Input.Email).FirstOrDefault();
+                            userFromDb.Role = SD.AdminEndUser;
+                            userFromDb.isLockRole = true;
+                            _db.SaveChanges();
+                        }
+                        //Tạo mail chứa url callback xác thực lúc tạo nhân viên mới, sau khi toàn tất thì redirect tới trang quản lý nhân viên
+                        using (var client = new MailKit.Net.Smtp.SmtpClient())
+                        {
+                            var message = new MimeMessage();
+                            message.From.Add(new MailboxAddress("News Page", "ngayvuive1999@gmail.com"));
+                            message.To.Add(new MailboxAddress("Not Reply", user.Email));
+                            message.Subject = "Confirm your email to join us";
+                            message.Body = new TextPart(MimeKit.Text.TextFormat.Text)
+                            {
+                                Text = "Bạn đã được Admin của trang chúng tôi đăng ký tài khoản nhân viên với tài khoản email là: "
+                                + user.Email + " và mật khẩu: " + Input.Password
+                                + " để xác thực nhấn: " + callbackUrl + " Trước khi đăng nhập vào trang quản lý đơn hàng, hãy đổi mật khẩu để có thể xử lý đơn hàng!"
+                            };
+
+                            client.Connect("smtp.gmail.com", 465, true);
+                            client.Authenticate("ngayvuive1999@gmail.com", "bainao1234");
+                            client.Send(message);
+                            client.Disconnect(true);
+                            return Redirect("https://localhost:44305/Admin/AdminSite");
+                        }
                     }
+                    //Nếu chưa đăng nhập trước đó hoặc đang là user-customer thì chỉ cho phép tạo tài khoản cho khách hàng
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        if (!await _roleManager.RoleExistsAsync(SD.Reader))
+                        {
+                            await _roleManager.CreateAsync(new IdentityRole(SD.Reader));
+                        }
+                        await _userManager.AddToRoleAsync(user, SD.Reader);
+                        ApplicationUser userFromDb = _db.ApplicationUser.Where(u => u.Email == Input.Email).FirstOrDefault();
+                        userFromDb.Role = SD.Reader;
+                        _db.SaveChanges();
+                        //Tạo thư gửi mail đến hòm thư mà khách hàng nhập lúc đăng ký sau đó redirect tới trang login
+                        using (var client = new MailKit.Net.Smtp.SmtpClient())
+                        {
+                            var message = new MimeMessage();
+                            message.From.Add(new MailboxAddress("News Page", "ngayvuive1999@gmail.com"));
+                            message.To.Add(new MailboxAddress("Not Reply", user.Email));
+                            message.Subject = "Confirm your email to join us";
+                            message.Body = new TextPart(MimeKit.Text.TextFormat.Text)
+                            {
+                                Text = "Bạn đã đăng ký với tài khoản email là: "
+                                + user.Email + " và mật khẩu: " + Input.Password
+                                + " để xác thực nhấn: " + callbackUrl
+                            };
+
+                            client.Connect("smtp.gmail.com", 465, true);
+                            client.Authenticate("ngayvuive1999@gmail.com", "bainao1234");
+                            client.Send(message);
+                            client.Disconnect(true);
+                            return RedirectToPage("Login");
+                        }
                     }
                 }
                 foreach (var error in result.Errors)
