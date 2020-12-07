@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NewsWebPage.Data;
 
 namespace NewsWebPage.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201129081001_PostSave")]
+    partial class PostSave
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,19 +332,39 @@ namespace NewsWebPage.Data.Migrations
                     b.Property<DateTime>("DateRead")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PostID")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReaderID")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostID");
-
                     b.HasIndex("ReaderID");
 
                     b.ToTable("PostSaves");
+                });
+
+            modelBuilder.Entity("NewsWebPage.Models.PostSaveDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("PostID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostSaveID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostID");
+
+                    b.HasIndex("PostSaveID");
+
+                    b.ToTable("PostSaveDetails");
                 });
 
             modelBuilder.Entity("NewsWebPage.Models.SpecialTags", b =>
@@ -458,15 +480,24 @@ namespace NewsWebPage.Data.Migrations
 
             modelBuilder.Entity("NewsWebPage.Models.PostSave", b =>
                 {
-                    b.HasOne("NewsWebPage.Models.Post", "Posts")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Reader")
+                        .WithMany()
+                        .HasForeignKey("ReaderID");
+                });
+
+            modelBuilder.Entity("NewsWebPage.Models.PostSaveDetail", b =>
+                {
+                    b.HasOne("NewsWebPage.Models.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Reader")
+                    b.HasOne("NewsWebPage.Models.PostSave", "PostSaves")
                         .WithMany()
-                        .HasForeignKey("ReaderID");
+                        .HasForeignKey("PostSaveID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

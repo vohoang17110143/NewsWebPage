@@ -20,5 +20,6 @@ namespace NewsWebPage.Data
         public DbSet<SpecialTags> SpecialTags { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<PostSave> PostSaves { get; set; }
     }
 }

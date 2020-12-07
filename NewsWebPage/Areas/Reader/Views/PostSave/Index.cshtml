@@ -1,0 +1,106 @@
+﻿@model NewsWebPage.Models.ViewModel.PostSaveViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using NewsWebPage.Data;
+@using NewsWebPage.Models.ViewModel;
+@inject ApplicationDbContext _db
+@using NewsWebPage.Extensions
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@{ int TotalPost = 0;
+    List<NumberOfPost> ls; }
+
+<form method="post">
+    <br /><br />
+
+    <section class="shopping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="cart-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hình ảnh</th>
+                                    <th class="p-name">Tên sản phẩm</th>
+                                    <th>Đơn giá</th>
+                                    <th>Số lượng đặt</th>
+                                    <th><i class="ti-close"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Posts.Count; i++)
+                                {
+                                    <tr>
+                                        <td class="cart-pic first-row"><img src="@Model.Posts[i].Image" alt=""></td>
+                                        <td class="cart-title first-row">
+                                            <a asp-action="Details" asp-controller="Home" class="text-black-50" asp-route-id="@Model.Posts[i].Id">  @Model.Posts[i].Name</a>
+                                        </td>
+                                        <td class="p-price first-row">@Model.Posts[i].Description </td>
+
+                                        <td class="close-td first-row"><button type="submit" class="ti-close" asp-action="remove" asp-route-id="@Model.Posts[i].Id">Xóa</button></td>
+                                    </tr>
+                                    TotalPost += 1;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                        </div>
+                        <div class="col-lg-4 offset-lg-4">
+                            <div class="proceed-checkout">
+                                <ul>
+                                    <li class="cart-total">Tổng Bài Đọc: <span>@TotalPost </span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="checkout-section spad">
+        <div class="container">
+            <div class="checkout-form">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="place-order">
+                            <h4>Thông tin người mua</h4>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                </div>
+
+                                <div class="order-btn">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section Scripts{
+    <script>
+        $('.timepicker').timepicker({
+            timeFormat: 'h:mm p',
+            interval: 30,
+            minTime: '10',
+            maxTime: '3:00pm',
+            startTime: '10:00',
+            dynamic: true,
+            dropdown: true,
+            scrollbar: true
+        });
+
+        $(function () {
+            $("#datepicker").datepicker({
+                minDate: +0, maxDate: "+3M"
+            });
+        });</script>
+}

@@ -2,6 +2,11 @@
 @using NewsWebPage.Extensions
 @using Microsoft.AspNetCore.Http
 
+@using NewsWebPage.Data;
+
+@inject ApplicationDbContext _db
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{ ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 
@@ -42,6 +47,14 @@
 
             <div class="form-group row">
                 <div class="col-4">
+                    <label asp-for="ViewCount"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ViewCount" class="form-control" readonly />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
                     <label asp-for="Author"></label>
                 </div>
                 <div class="col-8">
@@ -72,12 +85,40 @@
                     @Html.Raw(@Model.Content)
                 </div>
             </div>
-        </div>
 
-        <br />
-        <div class="form-group">
-            <input hidden asp-for="Id" />
-            <a asp-action="Index" class="btn btn-success">Back to List</a>
+            @*<div class="form-group row box " style="text-align:center;margin-left:90px">
+                    <div class="col-8">
+
+                        <form method="post">
+                            <div class="quantity">
+                                @{ bool isInBag = false;
+                                    List<int> lstSave = HttpContextAccessor.HttpContext.Session.Get<List<int>>("PostSaveBar");
+                                    if (lstSave != null && lstSave.Contains(Model.Id))
+                                    {
+                                        foreach (int item in lstSave)
+                                        {
+                                            isInBag = true;
+                                        }
+                                    } }
+                                @{
+                                                @if (isInBag)
+                                                {
+                                    <button type="submit" asp-action="Remove" asp-route-id="@Model.Id" class="btn btn-danger form-control">Xóa khỏi danh sách lưu</button> }
+                                else
+                                {<button type="submit" asp-route-id="@Model.Id" action="DetailsPost" class="primary-btn pd-cart">Thêm vào danh sách lưu</button>} }
+                            </div>
+                        </form>
+                    </div>
+                </div>*@
+
+            <button type="submit" action="DetailsPost" class="btn btn-primary">Thêm vào danh sách lưu</button>
         </div>
+    </div>
+
+    <br />
+    <div class="form-group">
+        <input hidden asp-for="Id" />
+        <a asp-action="Index" class="btn btn-success">Back to List</a>
+    </div>
     </div>
 </form>

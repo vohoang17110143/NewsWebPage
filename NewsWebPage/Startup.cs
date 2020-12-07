@@ -38,7 +38,7 @@ namespace NewsWebPage
             services.AddRazorPages();
 
             services.AddMvc(option => option.EnableEndpointRouting = false);
-
+            services.AddHttpContextAccessor();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -47,6 +47,7 @@ namespace NewsWebPage
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

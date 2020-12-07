@@ -7,7 +7,9 @@ namespace NewsWebPage.Models.ViewModel
 {
     public class PostSaveViewModel
     {
-        //public List<PostSave> PostSaves { get; set; }
-        //public PagingInfo PagingInfo { get; set; }
+        public List<Post> Posts { get; set; }
+
+        public PostSave PostSave { get; set; }
+        public ApplicationUser Reader { get; set; }
     }
 }
